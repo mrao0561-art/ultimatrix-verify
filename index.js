@@ -69,7 +69,7 @@ Click the button below to securely authenticate your Discord account.
 
         .setStyle(ButtonStyle.Link)
 
-        .setURL('http://192.168.1.251:3000');
+        .setURL('https://ultimatrix-verify-production.up.railway.app');
 
         const row = new ActionRowBuilder()
         .addComponents(button);
