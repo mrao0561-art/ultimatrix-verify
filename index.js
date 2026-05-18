@@ -287,7 +287,7 @@ src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202
 
 <br>
 
-<a href="${url}">
+<a href="' + url + '">
 <button class="verify-btn">
 Verify Securely
 </button>
