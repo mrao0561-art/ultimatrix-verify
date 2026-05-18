@@ -346,7 +346,7 @@ app.get('/callback', async (req, res) => {
             {
                 headers: {
                     Authorization:
-                    \`Bearer \${accessToken}\`
+                    `Bearer ${accessToken}`
                 }
             }
         );
