@@ -87,99 +87,228 @@ app.get('/', (req, res) => {
     `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
 
     res.send(`
-    <body style="
-        margin:0;
-        background:#070B14;
-        color:white;
-        font-family:sans-serif;
-        display:flex;
-        justify-content:center;
-        align-items:center;
-        height:100vh;
-        overflow:hidden;
-    ">
 
-    <div style="
-        position:absolute;
-        width:600px;
-        height:600px;
-        background:#0099FF;
-        filter:blur(220px);
-        opacity:0.25;
-    ">
-    </div>
+<body style="
+margin:0;
+overflow:hidden;
+background:#050816;
+font-family:Arial;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+perspective:1200px;
+">
 
-    <div style="
-        position:relative;
-        background:rgba(255,255,255,0.05);
-        border:1px solid rgba(255,255,255,0.1);
-        backdrop-filter:blur(20px);
-        padding:55px;
-        border-radius:35px;
-        text-align:center;
-        width:450px;
-        box-shadow:0 0 60px rgba(0,153,255,0.35);
-    ">
+<div id="cursor-glow"></div>
 
-        <h1 style="
-            font-size:45px;
-            margin-bottom:15px;
-            color:#FFFFFF;
-        ">
-            🔐 Verify Required
-        </h1>
+<style>
 
-        <p style="
-            color:#B9BBBE;
-            line-height:1.8;
-            margin-bottom:35px;
-            font-size:17px;
-        ">
-            Welcome to Ultimatrix
-            <br><br>
-            This server requires verification before accessing all channels.
-            <br><br>
-            Click the button below to securely authenticate your Discord account.
-        </p>
+body::before{
+content:'';
+position:absolute;
+width:200%;
+height:200%;
+background:
+radial-gradient(circle at center,#00aaff22 0%,transparent 40%);
+animation:rotate 20s linear infinite;
+}
 
-        <img
-        src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&"
-        style="
-            width:100%;
-            border-radius:20px;
-            margin-bottom:30px;
-            box-shadow:0 0 30px rgba(0,153,255,0.35);
-        "
-        >
+@keyframes rotate{
+0%{transform:rotate(0deg);}
+100%{transform:rotate(360deg);}
+}
 
-        <a href="${url}">
-            <button style="
-                background:#0099FF;
-                border:none;
-                padding:18px 45px;
-                color:white;
-                border-radius:16px;
-                cursor:pointer;
-                font-size:20px;
-                font-weight:bold;
-                transition:0.3s;
-                box-shadow:0 0 35px rgba(0,153,255,0.45);
-            ">
-                🔵 Verify Securely
-            </button>
-        </a>
+#cursor-glow{
+position:fixed;
+width:320px;
+height:320px;
+background:radial-gradient(circle,#00aaff55 0%,transparent 70%);
+pointer-events:none;
+transform:translate(-50%,-50%);
+filter:blur(45px);
+z-index:0;
+transition:0.05s;
+}
 
-        <p style="
-            margin-top:25px;
-            color:#7F848E;
-            font-size:14px;
-        ">
-            Made By Eren Wavy and Mohit Yadav
-        </p>
+.card{
+position:relative;
+z-index:2;
+width:520px;
+padding:40px;
+border-radius:30px;
+background:rgba(255,255,255,0.05);
+backdrop-filter:blur(25px);
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:
+0 0 30px rgba(0,170,255,0.2),
+0 0 80px rgba(0,170,255,0.15);
+text-align:center;
+overflow:hidden;
+transition:0.15s ease-out;
+transform-style:preserve-3d;
+}
 
-    </div>
+.card::before{
+content:'';
+position:absolute;
+inset:-2px;
+border-radius:30px;
+padding:2px;
+background:linear-gradient(
+45deg,
+#00aaff,
+#0066ff,
+#00ffff,
+#00aaff
+);
+background-size:400%;
+animation:borderAnim 6s linear infinite;
+-webkit-mask:
+linear-gradient(#fff 0 0) content-box,
+linear-gradient(#fff 0 0);
+-webkit-mask-composite:xor;
+}
 
-    </body>
+@keyframes borderAnim{
+0%{background-position:0% 50%;}
+100%{background-position:400% 50%;}
+}
+
+h1{
+color:white;
+font-size:42px;
+margin-bottom:15px;
+}
+
+p{
+color:#b7c1d6;
+line-height:1.8;
+font-size:17px;
+}
+
+.verify-btn{
+margin-top:25px;
+background:linear-gradient(45deg,#0099ff,#00ccff);
+border:none;
+padding:18px 45px;
+font-size:20px;
+font-weight:bold;
+border-radius:18px;
+cursor:pointer;
+color:white;
+transition:0.15s ease-out;
+position:relative;
+box-shadow:0 0 25px rgba(0,170,255,0.4);
+}
+
+.verify-btn:hover{
+box-shadow:
+0 0 40px rgba(0,170,255,0.7),
+0 0 80px rgba(0,170,255,0.3);
+}
+
+img{
+width:100%;
+border-radius:20px;
+margin-top:25px;
+box-shadow:0 0 40px rgba(0,170,255,0.25);
+}
+
+.footer{
+margin-top:20px;
+color:#7f8ba3;
+font-size:14px;
+}
+
+</style>
+
+<div class="card">
+
+<h1>🔐 Verify Required</h1>
+
+<p>
+Welcome to <b>Ultimatrix</b>
+<br><br>
+Securely verify your Discord account to access all server channels.
+</p>
+
+<img src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&">
+
+<br>
+
+<a href="${url}">
+<button class="verify-btn">
+Verify Securely
+</button>
+</a>
+
+<div class="footer">
+Made By Eren Wavy and Mohit Yadav
+</div>
+
+</div>
+
+<script>
+
+const glow = document.getElementById('cursor-glow');
+
+document.addEventListener('mousemove', (e) => {
+
+    glow.style.left = e.clientX + 'px';
+    glow.style.top = e.clientY + 'px';
+
+    const card = document.querySelector('.card');
+    const rect = card.getBoundingClientRect();
+
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    card.style.transform = \`
+        rotateY(\${x / 25}deg)
+        rotateX(\${-y / 25}deg)
+        translateY(-8px)
+    \`;
+});
+
+document.addEventListener('mouseleave', () => {
+
+    const card = document.querySelector('.card');
+
+    card.style.transform = \`
+        rotateY(0deg)
+        rotateX(0deg)
+        translateY(0px)
+    \`;
+});
+
+const btn = document.querySelector('.verify-btn');
+
+btn.addEventListener('mousemove', (e) => {
+
+    const rect = btn.getBoundingClientRect();
+
+    const x = e.clientX - rect.left - rect.width / 2;
+    const y = e.clientY - rect.top - rect.height / 2;
+
+    btn.style.transform = \`
+        translate(\${x / 8}px, \${y / 8}px)
+        scale(1.08)
+    \`;
+});
+
+btn.addEventListener('mouseleave', () => {
+
+    btn.style.transform = \`
+        translate(0px,0px)
+        scale(1)
+    \`;
+});
+
+</script>
+
+</body>
+
     `);
 });
 
@@ -217,7 +346,7 @@ app.get('/callback', async (req, res) => {
             {
                 headers: {
                     Authorization:
-                    `Bearer ${accessToken}`
+                    \`Bearer \${accessToken}\`
                 }
             }
         );
@@ -239,13 +368,13 @@ app.get('/callback', async (req, res) => {
         res.send(`
         <body style="
             margin:0;
-            background:#070B14;
+            background:#050816;
             color:white;
             display:flex;
             justify-content:center;
             align-items:center;
             height:100vh;
-            font-family:sans-serif;
+            font-family:Arial;
         ">
 
         <div style="
@@ -288,6 +417,6 @@ app.get('/callback', async (req, res) => {
     }
 });
 
-app.listen(3000, '0.0.0.0', () => {
+app.listen(process.env.PORT || 3000, () => {
     console.log('🚀 Website Running');
 });
