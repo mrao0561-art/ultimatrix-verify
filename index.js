@@ -23,7 +23,7 @@ const client = new Client({
     ]
 });
 
-client.once('clientReady', () => {
+client.once('ready', () => {
     console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
@@ -287,7 +287,7 @@ src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202
 
 <br>
 
-<a href="' + url + '">
+<a href="${url}">
 <button class="verify-btn">
 Verify Securely
 </button>
@@ -322,9 +322,9 @@ const y =
 e.clientY - rect.top - rect.height / 2;
 
 card.style.transform =
-`rotateY(${x / 25}deg)
-rotateX(${-y / 25}deg)
-translateY(-8px)`;
+\`rotateY(\${x / 25}deg)
+rotateX(\${-y / 25}deg)
+translateY(-8px)\`;
 
 });
 
@@ -353,8 +353,8 @@ const y =
 e.clientY - rect.top - rect.height / 2;
 
 btn.style.transform =
-`translate(${x / 8}px, ${y / 8}px)
-scale(1.08)`;
+\`translate(\${x / 8}px, \${y / 8}px)
+scale(1.08)\`;
 
 });
 
