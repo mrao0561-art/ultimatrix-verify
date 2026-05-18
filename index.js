@@ -23,23 +23,25 @@ const client = new Client({
     ]
 });
 
-client.login(process.env.TOKEN);
-
 client.once('ready', () => {
     console.log(`✅ Logged in as ${client.user.tag}`);
 });
 
-client.on('messageCreate', async message => {
+client.login(process.env.TOKEN);
+
+client.on('messageCreate', async (message) => {
 
     if (message.author.bot) return;
 
     if (message.content === '!verify') {
 
-        await message.delete();
+        try {
+            await message.delete();
+        } catch (err) {}
 
         const embed = new EmbedBuilder()
 
-        .setColor('#0099FF')
+        .setColor('#00B0FF')
 
         .setTitle('🔐 Verify Required')
 
@@ -84,7 +86,7 @@ Click the button below to securely authenticate your Discord account.
 app.get('/', (req, res) => {
 
     const url =
-    `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
+`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
 
     res.send(`
 
@@ -102,15 +104,21 @@ app.get('/', (req, res) => {
 
 <style>
 
-body{
+*{
 margin:0;
+padding:0;
+box-sizing:border-box;
+}
+
+body{
+width:100%;
+height:100vh;
 overflow:hidden;
 background:#050816;
 font-family:Arial;
 display:flex;
 justify-content:center;
 align-items:center;
-height:100vh;
 perspective:1200px;
 }
 
@@ -121,19 +129,24 @@ width:200%;
 height:200%;
 background:
 radial-gradient(circle at center,#00aaff22 0%,transparent 40%);
-animation:rotate 20s linear infinite;
+animation:rotate 25s linear infinite;
 }
 
 @keyframes rotate{
-0%{transform:rotate(0deg);}
-100%{transform:rotate(360deg);}
+0%{
+transform:rotate(0deg);
+}
+100%{
+transform:rotate(360deg);
+}
 }
 
 #cursor-glow{
 position:fixed;
 width:320px;
 height:320px;
-background:radial-gradient(circle,#00aaff55 0%,transparent 70%);
+background:
+radial-gradient(circle,#00aaff55 0%,transparent 70%);
 pointer-events:none;
 transform:translate(-50%,-50%);
 filter:blur(45px);
@@ -144,7 +157,7 @@ transition:0.05s;
 .card{
 position:relative;
 z-index:2;
-width:520px;
+width:540px;
 padding:40px;
 border-radius:30px;
 background:rgba(255,255,255,0.05);
@@ -165,7 +178,8 @@ position:absolute;
 inset:-2px;
 border-radius:30px;
 padding:2px;
-background:linear-gradient(
+background:
+linear-gradient(
 45deg,
 #00aaff,
 #0066ff,
@@ -174,34 +188,51 @@ background:linear-gradient(
 );
 background-size:400%;
 animation:borderAnim 6s linear infinite;
+
 -webkit-mask:
 linear-gradient(#fff 0 0) content-box,
 linear-gradient(#fff 0 0);
+
 -webkit-mask-composite:xor;
 }
 
 @keyframes borderAnim{
-0%{background-position:0% 50%;}
-100%{background-position:400% 50%;}
+0%{
+background-position:0% 50%;
+}
+100%{
+background-position:400% 50%;
+}
 }
 
-h1{
-color:white;
+.title{
 font-size:42px;
-margin-bottom:15px;
+color:white;
+margin-bottom:20px;
+font-weight:bold;
 }
 
-p{
+.desc{
 color:#b7c1d6;
-line-height:1.8;
 font-size:17px;
+line-height:1.8;
+margin-top:10px;
+}
+
+.verify-image{
+width:100%;
+border-radius:22px;
+margin-top:30px;
+box-shadow:
+0 0 35px rgba(0,170,255,0.25);
 }
 
 .verify-btn{
-margin-top:25px;
-background:linear-gradient(45deg,#0099ff,#00ccff);
+margin-top:30px;
+background:
+linear-gradient(45deg,#0099ff,#00ccff);
 border:none;
-padding:18px 45px;
+padding:18px 48px;
 font-size:20px;
 font-weight:bold;
 border-radius:18px;
@@ -209,7 +240,8 @@ cursor:pointer;
 color:white;
 transition:0.15s ease-out;
 position:relative;
-box-shadow:0 0 25px rgba(0,170,255,0.4);
+box-shadow:
+0 0 25px rgba(0,170,255,0.4);
 }
 
 .verify-btn:hover{
@@ -218,15 +250,8 @@ box-shadow:
 0 0 80px rgba(0,170,255,0.3);
 }
 
-.verify-image{
-width:100%;
-border-radius:20px;
-margin-top:25px;
-box-shadow:0 0 40px rgba(0,170,255,0.25);
-}
-
 .footer{
-margin-top:20px;
+margin-top:22px;
 color:#7f8ba3;
 font-size:14px;
 }
@@ -241,13 +266,19 @@ font-size:14px;
 
 <div class="card">
 
-<h1>🔐 Verify Required</h1>
+<div class="title">
+🔐 Verify Required
+</div>
 
-<p>
+<div class="desc">
+
 Welcome to <b>Ultimatrix</b>
+
 <br><br>
+
 Securely verify your Discord account to access all server channels.
-</p>
+
+</div>
 
 <img
 class="verify-image"
@@ -270,52 +301,68 @@ Made By Eren Wavy and Mohit Yadav
 
 <script>
 
-const glow = document.getElementById('cursor-glow');
+const glow =
+document.getElementById('cursor-glow');
 
 document.addEventListener('mousemove', (e) => {
 
-    glow.style.left = e.clientX + 'px';
-    glow.style.top = e.clientY + 'px';
+glow.style.left = e.clientX + 'px';
+glow.style.top = e.clientY + 'px';
 
-    const card = document.querySelector('.card');
-    const rect = card.getBoundingClientRect();
+const card =
+document.querySelector('.card');
 
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+const rect =
+card.getBoundingClientRect();
 
-    card.style.transform =
-    \`rotateY(\${x / 25}deg)
-    rotateX(\${-y / 25}deg)
-    translateY(-8px)\`;
+const x =
+e.clientX - rect.left - rect.width / 2;
+
+const y =
+e.clientY - rect.top - rect.height / 2;
+
+card.style.transform =
+\`rotateY(\${x / 25}deg)
+rotateX(\${-y / 25}deg)
+translateY(-8px)\`;
 
 });
 
 document.addEventListener('mouseleave', () => {
 
-    const card = document.querySelector('.card');
+const card =
+document.querySelector('.card');
 
-    card.style.transform =
-    'rotateY(0deg) rotateX(0deg) translateY(0px)';
+card.style.transform =
+'rotateY(0deg) rotateX(0deg) translateY(0px)';
+
 });
 
-const btn = document.querySelector('.verify-btn');
+const btn =
+document.querySelector('.verify-btn');
 
 btn.addEventListener('mousemove', (e) => {
 
-    const rect = btn.getBoundingClientRect();
+const rect =
+btn.getBoundingClientRect();
 
-    const x = e.clientX - rect.left - rect.width / 2;
-    const y = e.clientY - rect.top - rect.height / 2;
+const x =
+e.clientX - rect.left - rect.width / 2;
 
-    btn.style.transform =
-    \`translate(\${x / 8}px, \${y / 8}px) scale(1.08)\`;
+const y =
+e.clientY - rect.top - rect.height / 2;
+
+btn.style.transform =
+\`translate(\${x / 8}px, \${y / 8}px)
+scale(1.08)\`;
 
 });
 
 btn.addEventListener('mouseleave', () => {
 
-    btn.style.transform =
-    'translate(0px,0px) scale(1)';
+btn.style.transform =
+'translate(0px,0px) scale(1)';
+
 });
 
 </script>
@@ -324,7 +371,7 @@ btn.addEventListener('mouseleave', () => {
 
 </html>
 
-    `);
+`);
 });
 
 app.get('/callback', async (req, res) => {
@@ -333,14 +380,14 @@ app.get('/callback', async (req, res) => {
 
     try {
 
-        const tokenRes = await axios.post(
+        const tokenResponse = await axios.post(
             'https://discord.com/api/oauth2/token',
 
             new URLSearchParams({
                 client_id: process.env.CLIENT_ID,
                 client_secret: process.env.CLIENT_SECRET,
                 grant_type: 'authorization_code',
-                code,
+                code: code,
                 redirect_uri: process.env.REDIRECT_URI,
                 scope: 'identify'
             }),
@@ -354,9 +401,10 @@ app.get('/callback', async (req, res) => {
         );
 
         const accessToken =
-        tokenRes.data.access_token;
+        tokenResponse.data.access_token;
 
-        const userRes = await axios.get(
+        const userResponse =
+        await axios.get(
             'https://discord.com/api/users/@me',
             {
                 headers: {
@@ -366,7 +414,8 @@ app.get('/callback', async (req, res) => {
             }
         );
 
-        const user = userRes.data;
+        const user =
+        userResponse.data;
 
         const guild =
         await client.guilds.fetch(
@@ -381,50 +430,82 @@ app.get('/callback', async (req, res) => {
         );
 
         res.send(`
-        <body style="
-            margin:0;
-            background:#050816;
-            color:white;
-            display:flex;
-            justify-content:center;
-            align-items:center;
-            height:100vh;
-            font-family:Arial;
-        ">
 
-        <div style="
-            background:rgba(255,255,255,0.05);
-            padding:60px;
-            border-radius:30px;
-            text-align:center;
-            border:1px solid rgba(255,255,255,0.1);
-            box-shadow:0 0 50px rgba(0,153,255,0.25);
-        ">
+<!DOCTYPE html>
 
-            <h1 style="
-                font-size:48px;
-                color:#00B0FF;
-                margin-bottom:20px;
-            ">
-                ✅ Verification Complete
-            </h1>
+<html>
 
-            <p style="
-                color:#B9BBBE;
-                font-size:18px;
-                line-height:1.7;
-            ">
-                Your Discord account has been successfully verified.
-                <br><br>
-                You can now return to the server and access all channels.
-            </p>
+<head>
 
-        </div>
+<title>Verified</title>
 
-        </body>
-        `);
+<style>
 
-    } catch(err) {
+body{
+margin:0;
+background:#050816;
+color:white;
+display:flex;
+justify-content:center;
+align-items:center;
+height:100vh;
+font-family:Arial;
+}
+
+.box{
+background:rgba(255,255,255,0.05);
+padding:60px;
+border-radius:30px;
+text-align:center;
+border:1px solid rgba(255,255,255,0.1);
+box-shadow:
+0 0 50px rgba(0,153,255,0.25);
+}
+
+.title{
+font-size:48px;
+color:#00B0FF;
+margin-bottom:20px;
+font-weight:bold;
+}
+
+.text{
+color:#B9BBBE;
+font-size:18px;
+line-height:1.8;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<div class="box">
+
+<div class="title">
+✅ Verification Complete
+</div>
+
+<div class="text">
+
+Your Discord account has been successfully verified.
+
+<br><br>
+
+You can now return to the server and access all channels.
+
+</div>
+
+</div>
+
+</body>
+
+</html>
+
+`);
+
+    } catch (err) {
 
         console.log(err);
 
@@ -433,5 +514,7 @@ app.get('/callback', async (req, res) => {
 });
 
 app.listen(process.env.PORT || 3000, () => {
+
     console.log('🚀 Website Running');
+
 });
