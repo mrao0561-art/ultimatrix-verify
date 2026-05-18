@@ -417,17 +417,7 @@ app.get('/callback', async (req, res) => {
         const user =
         userResponse.data;
 
-        const guild =
-        await client.guilds.fetch(
-            process.env.GUILD_ID
-        );
-
-        const member =
-        await guild.members.fetch(user.id);
-
-        await member.roles.add(
-            process.env.VERIFY_ROLE_ID
-        );
+        console.log('User Verified:', user.username);
 
         res.send(`
 
