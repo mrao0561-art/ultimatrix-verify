@@ -83,7 +83,7 @@ Click the button below to securely authenticate your Discord account.
     }
 });
 
-app.get('/', (req, res) => {
+app.get('/login', (req, res) => {  const url = `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;  res.redirect(url);  });  app.get('/callback', async (req, res) => {  const code = req.query.code;  if (!code) { return res.send('No code provided'); }  res.send('Verification Success');  });
 
     const url =
 `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
