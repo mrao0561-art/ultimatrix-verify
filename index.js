@@ -88,7 +88,21 @@ app.get('/', (req, res) => {
 
     res.send(`
 
-<body style="
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+<meta charset="UTF-8">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Ultimatrix Verification</title>
+
+<style>
+
+body{
 margin:0;
 overflow:hidden;
 background:#050816;
@@ -98,11 +112,7 @@ justify-content:center;
 align-items:center;
 height:100vh;
 perspective:1200px;
-">
-
-<div id="cursor-glow"></div>
-
-<style>
+}
 
 body::before{
 content:'';
@@ -208,7 +218,7 @@ box-shadow:
 0 0 80px rgba(0,170,255,0.3);
 }
 
-img{
+.verify-image{
 width:100%;
 border-radius:20px;
 margin-top:25px;
@@ -223,6 +233,12 @@ font-size:14px;
 
 </style>
 
+</head>
+
+<body>
+
+<div id="cursor-glow"></div>
+
 <div class="card">
 
 <h1>🔐 Verify Required</h1>
@@ -233,7 +249,10 @@ Welcome to <b>Ultimatrix</b>
 Securely verify your Discord account to access all server channels.
 </p>
 
-<img src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&">
+<img
+class="verify-image"
+src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&"
+/>
 
 <br>
 
@@ -264,22 +283,19 @@ document.addEventListener('mousemove', (e) => {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    card.style.transform = \`
-        rotateY(\${x / 25}deg)
-        rotateX(\${-y / 25}deg)
-        translateY(-8px)
-    \`;
+    card.style.transform =
+    \`rotateY(\${x / 25}deg)
+    rotateX(\${-y / 25}deg)
+    translateY(-8px)\`;
+
 });
 
 document.addEventListener('mouseleave', () => {
 
     const card = document.querySelector('.card');
 
-    card.style.transform = \`
-        rotateY(0deg)
-        rotateX(0deg)
-        translateY(0px)
-    \`;
+    card.style.transform =
+    'rotateY(0deg) rotateX(0deg) translateY(0px)';
 });
 
 const btn = document.querySelector('.verify-btn');
@@ -291,23 +307,22 @@ btn.addEventListener('mousemove', (e) => {
     const x = e.clientX - rect.left - rect.width / 2;
     const y = e.clientY - rect.top - rect.height / 2;
 
-    btn.style.transform = \`
-        translate(\${x / 8}px, \${y / 8}px)
-        scale(1.08)
-    \`;
+    btn.style.transform =
+    \`translate(\${x / 8}px, \${y / 8}px) scale(1.08)\`;
+
 });
 
 btn.addEventListener('mouseleave', () => {
 
-    btn.style.transform = \`
-        translate(0px,0px)
-        scale(1)
-    \`;
+    btn.style.transform =
+    'translate(0px,0px) scale(1)';
 });
 
 </script>
 
 </body>
+
+</html>
 
     `);
 });
