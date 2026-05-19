@@ -1,25 +1,19 @@
 require('dotenv').config();
 
-const express = require('express');
-const axios = require('axios');
-
 const {
     Client,
-    GatewayIntentBits,
-    EmbedBuilder,
-    ActionRowBuilder,
-    ButtonBuilder,
-    ButtonStyle
+    GatewayIntentBits
 } = require('discord.js');
+
+const express = require('express');
+const axios = require('axios');
 
 const app = express();
 
 const client = new Client({
     intents: [
         GatewayIntentBits.Guilds,
-        GatewayIntentBits.GuildMembers,
-        GatewayIntentBits.GuildMessages,
-        GatewayIntentBits.MessageContent
+        GatewayIntentBits.GuildMembers
     ]
 });
 
@@ -29,64 +23,18 @@ client.once('ready', () => {
 
 client.login(process.env.TOKEN);
 
-client.on('messageCreate', async (message) => {
 
-    if (message.author.bot) return;
 
-    if (message.content === '!verify') {
 
-        try {
-            await message.delete();
-        } catch (err) {}
 
-        const embed = new EmbedBuilder()
-
-        .setColor('#00B0FF')
-
-        .setTitle('🔐 Verify Required')
-
-        .setDescription(`
-# Welcome to Ultimatrix
-
-This server requires **Verification** before accessing all channels.
-
-Click the button below to securely authenticate your Discord account.
-
-━━━━━━━━━━━━━━━━━━
-⚡ Fast Verification  
-🛡️ Advanced Security  
-🚀 Instant Server Access
-━━━━━━━━━━━━━━━━━━
-`)
-
-        .setImage('https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&')
-
-        .setFooter({
-            text: 'Made By Eren Wavy and Mohit Yadav'
-        });
-
-        const button = new ButtonBuilder()
-
-        .setLabel('🔵 Verify Securely')
-
-        .setStyle(ButtonStyle.Link)
-
-        .setURL('https://ultimatrix-verify-production.up.railway.app');
-
-        const row = new ActionRowBuilder()
-        .addComponents(button);
-
-        await message.channel.send({
-            embeds: [embed],
-            components: [row]
-        });
-    }
-});
+/* =========================
+   HOME PAGE
+========================= */
 
 app.get('/', (req, res) => {
 
     const url =
-`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify%20guilds.join`;
+    `https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
 
     res.send(`
 
@@ -100,7 +48,7 @@ app.get('/', (req, res) => {
 
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<title>Ultimatrix Verification</title>
+<title>Ultimatrix Verify</title>
 
 <style>
 
@@ -111,149 +59,78 @@ box-sizing:border-box;
 }
 
 body{
-width:100%;
 height:100vh;
-overflow:hidden;
-background:#050816;
-font-family:Arial;
 display:flex;
 justify-content:center;
 align-items:center;
-perspective:1200px;
-}
-
-body::before{
-content:'';
-position:absolute;
-width:200%;
-height:200%;
-background:
-radial-gradient(circle at center,#00aaff22 0%,transparent 40%);
-animation:rotate 25s linear infinite;
-}
-
-@keyframes rotate{
-0%{
-transform:rotate(0deg);
-}
-100%{
-transform:rotate(360deg);
-}
-}
-
-#cursor-glow{
-position:fixed;
-width:320px;
-height:320px;
-background:
-radial-gradient(circle,#00aaff55 0%,transparent 70%);
-pointer-events:none;
-transform:translate(-50%,-50%);
-filter:blur(45px);
-z-index:0;
-transition:0.05s;
+background:#050816;
+font-family:Arial;
+overflow:hidden;
 }
 
 .card{
-position:relative;
-z-index:2;
-width:540px;
-padding:40px;
+width:420px;
+padding:50px;
 border-radius:30px;
 background:rgba(255,255,255,0.05);
-backdrop-filter:blur(25px);
+backdrop-filter:blur(20px);
 border:1px solid rgba(255,255,255,0.1);
-box-shadow:
-0 0 30px rgba(0,170,255,0.2),
-0 0 80px rgba(0,170,255,0.15);
+box-shadow:0 0 50px rgba(0,140,255,0.2);
 text-align:center;
-overflow:hidden;
-transition:0.15s ease-out;
-transform-style:preserve-3d;
+transition:0.2s;
+position:relative;
 }
 
-.card::before{
-content:'';
-position:absolute;
-inset:-2px;
-border-radius:30px;
-padding:2px;
-background:
-linear-gradient(
-45deg,
-#00aaff,
-#0066ff,
-#00ffff,
-#00aaff
-);
-background-size:400%;
-animation:borderAnim 6s linear infinite;
-
--webkit-mask:
-linear-gradient(#fff 0 0) content-box,
-linear-gradient(#fff 0 0);
-
--webkit-mask-composite:xor;
-}
-
-@keyframes borderAnim{
-0%{
-background-position:0% 50%;
-}
-100%{
-background-position:400% 50%;
-}
+.logo{
+font-size:70px;
+margin-bottom:20px;
 }
 
 .title{
 font-size:42px;
-color:white;
-margin-bottom:20px;
 font-weight:bold;
+color:white;
+margin-bottom:15px;
 }
 
 .desc{
-color:#b7c1d6;
 font-size:17px;
-line-height:1.8;
-margin-top:10px;
-}
-
-.verify-image{
-width:100%;
-border-radius:22px;
-margin-top:30px;
-box-shadow:
-0 0 35px rgba(0,170,255,0.25);
+color:#aaa;
+line-height:1.7;
+margin-bottom:35px;
 }
 
 .verify-btn{
-margin-top:30px;
-background:
-linear-gradient(45deg,#0099ff,#00ccff);
-border:none;
-padding:18px 48px;
+display:inline-block;
+padding:18px 40px;
+background:linear-gradient(45deg,#0099ff,#7b2cff);
+border-radius:15px;
 font-size:20px;
 font-weight:bold;
-border-radius:18px;
-cursor:pointer;
 color:white;
-transition:0.15s ease-out;
+text-decoration:none;
+transition:0.2s;
 position:relative;
-box-shadow:
-0 0 25px rgba(0,170,255,0.4);
+overflow:hidden;
 }
 
 .verify-btn:hover{
+transform:translateY(-5px) scale(1.03);
 box-shadow:
-0 0 40px rgba(0,170,255,0.7),
-0 0 80px rgba(0,170,255,0.3);
+0 0 30px rgba(0,153,255,0.6),
+0 0 60px rgba(123,44,255,0.4);
 }
 
-.footer{
-margin-top:22px;
-color:#7f8ba3;
-font-size:14px;
+.glow{
+position:absolute;
+width:400px;
+height:400px;
+background:radial-gradient(circle,
+rgba(0,153,255,0.25),
+transparent 70%);
+pointer-events:none;
+transform:translate(-50%,-50%);
+mix-blend-mode:screen;
 }
 
 </style>
@@ -262,106 +139,56 @@ font-size:14px;
 
 <body>
 
-<div id="cursor-glow"></div>
+<div class="glow"></div>
 
 <div class="card">
 
+<div class="logo">🛡️</div>
+
 <div class="title">
-🔐 Verify Required
+Ultimatrix Verify
 </div>
 
 <div class="desc">
-
-Welcome to <b>Ultimatrix</b>
-
-<br><br>
-
-Securely verify your Discord account to access all server channels.
-
+Secure Discord verification system with smooth animations and glowing UI.
 </div>
 
-<img
-class="verify-image"
-src="https://cdn.discordapp.com/attachments/1441840450666496060/1506034398540202035/IMG_1824.gif?ex=6a0ccb55&is=6a0b79d5&hm=cd870c65394d739ae575ef95a894232c4b0d7cc739a643b604d913eaaab4160e&"
-/>
-
-<br>
-
-<a href="${url}">
-<button class="verify-btn">
-Verify Securely
-</button>
+<a class="verify-btn" href="${url}">
+Verify Now
 </a>
-
-<div class="footer">
-Made By Eren Wavy and Mohit Yadav
-</div>
 
 </div>
 
 <script>
 
-const glow =
-document.getElementById('cursor-glow');
+const glow = document.querySelector('.glow');
 
 document.addEventListener('mousemove', (e) => {
 
 glow.style.left = e.clientX + 'px';
 glow.style.top = e.clientY + 'px';
 
-const card =
-document.querySelector('.card');
+});
 
-const rect =
-card.getBoundingClientRect();
+const card = document.querySelector('.card');
+
+document.addEventListener('mousemove', (e) => {
 
 const x =
-e.clientX - rect.left - rect.width / 2;
+(window.innerWidth / 2 - e.pageX) / 25;
 
 const y =
-e.clientY - rect.top - rect.height / 2;
+(window.innerHeight / 2 - e.pageY) / 25;
 
 card.style.transform =
-\`rotateY(\${x / 25}deg)
-rotateX(\${-y / 25}deg)
-translateY(-8px)\`;
+'rotateY(' + x + 'deg) rotateX(' + y + 'deg)';
 
 });
 
 document.addEventListener('mouseleave', () => {
 
-const card =
-document.querySelector('.card');
-
 card.style.transform =
-'rotateY(0deg) rotateX(0deg) translateY(0px)';
-
-});
-
-const btn =
-document.querySelector('.verify-btn');
-
-btn.addEventListener('mousemove', (e) => {
-
-const rect =
-btn.getBoundingClientRect();
-
-const x =
-e.clientX - rect.left - rect.width / 2;
-
-const y =
-e.clientY - rect.top - rect.height / 2;
-
-btn.style.transform =
-\`translate(\${x / 8}px, \${y / 8}px)
-scale(1.08)\`;
-
-});
-
-btn.addEventListener('mouseleave', () => {
-
-btn.style.transform =
-'translate(0px,0px) scale(1)';
+'rotateY(0deg) rotateX(0deg)';
 
 });
 
@@ -372,11 +199,25 @@ btn.style.transform =
 </html>
 
 `);
+
 });
+
+
+
+
+
+
+/* =========================
+   CALLBACK
+========================= */
 
 app.get('/callback', async (req, res) => {
 
     const code = req.query.code;
+
+    if (!code) {
+        return res.send('No OAuth code found');
+    }
 
     try {
 
@@ -417,7 +258,10 @@ app.get('/callback', async (req, res) => {
         const user =
         userResponse.data;
 
-        console.log('User Verified:', user.username);
+        console.log(
+            'User Verified:',
+            user.username
+        );
 
         res.send(`
 
@@ -440,6 +284,7 @@ justify-content:center;
 align-items:center;
 height:100vh;
 font-family:Arial;
+overflow:hidden;
 }
 
 .box{
@@ -483,7 +328,7 @@ Your Discord account has been successfully verified.
 
 <br><br>
 
-You can now return to the server and access all channels.
+You can now return to Discord.
 
 </div>
 
@@ -495,17 +340,36 @@ You can now return to the server and access all channels.
 
 `);
 
-        } catch (err) {
+    } catch (err) {
 
         console.log(err.response?.data || err);
 
         return res.status(500).send(`
-        <h1 style="background:#050816;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Arial;">
+        <h1 style="
+        background:#050816;
+        color:white;
+        height:100vh;
+        display:flex;
+        justify-content:center;
+        align-items:center;
+        font-family:Arial;
+        ">
         Verification Failed
         </h1>
         `);
+
     }
+
 });
+
+
+
+
+
+
+/* =========================
+   SERVER
+========================= */
 
 app.listen(process.env.PORT || 3000, () => {
 
