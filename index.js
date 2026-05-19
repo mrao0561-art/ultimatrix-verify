@@ -86,7 +86,7 @@ Click the button below to securely authenticate your Discord account.
 app.get('/', (req, res) => {
 
     const url =
-`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify`;
+`https://discord.com/oauth2/authorize?client_id=${process.env.CLIENT_ID}&response_type=code&redirect_uri=${encodeURIComponent(process.env.REDIRECT_URI)}&scope=identify%20guilds.join`;
 
     res.send(`
 
@@ -497,11 +497,14 @@ You can now return to the server and access all channels.
 
     } catch (err) {
 
-        console.log(err);
+        console.log(err.response?.data || err);
 
-        res.send('Verification Failed');
-    }
-});
+            return res.status(500).send(`
+    <h1 style="background:#050816;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Arial;">
+    Verification Failed
+    </h1>
+    `);
+}
 
 app.listen(process.env.PORT || 3000, () => {
 
