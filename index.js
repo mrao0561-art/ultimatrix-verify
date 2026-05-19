@@ -495,16 +495,17 @@ You can now return to the server and access all channels.
 
 `);
 
-    } catch (err) {
+        } catch (err) {
 
         console.log(err.response?.data || err);
 
-            return res.status(500).send(`
-    <h1 style="background:#050816;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Arial;">
-    Verification Failed
-    </h1>
-    `);
-}
+        return res.status(500).send(`
+        <h1 style="background:#050816;color:white;height:100vh;display:flex;justify-content:center;align-items:center;font-family:Arial;">
+        Verification Failed
+        </h1>
+        `);
+    }
+});
 
 app.listen(process.env.PORT || 3000, () => {
 
